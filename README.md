@@ -27,4 +27,21 @@ step by step deploy restful api node js in ECS Fargate AWS :
 
    Here, we specify a task definition so Amazon ECS knows which Docker image to use for containers, how many containers to use in the task, and the resource allocation for each container.
 
-7.   
+7. Service definitions :
+
+   Now that we have created a task definition, we will configure the Amazon ECS service. By running an application as a service, Amazon ECS will auto-recover any stopped tasks and maintain the number of copies we specify: it is meant to run indefinitely, so by running it as a service, it will restart if the task becomes unhealthy or unexpectedly stops.
+
+   We can access our container app without using LB via Public IP which we can get from the Task Details page under the network section. For example, though our current container port 80, if the container is running on port xxxx, we can see the app using
+
+   However, in this post, we're going to use a load balancer for our service.
+
+   Note that for awsvpc mode, and therefore for Fargate, we use the IP target type instead of the instance target type.
+
+
+   The two security groups will be created to secure our service:
+
+   An Application Load Balancer security group that allows all traffic on the Application Load Balancer port
+   
+   An ECS security group that allows all traffic ONLY from the Application Load Balancer security group.
+
+Note also that ECS will create a Service IAM Role named ecsServiceRole if it has not been created.
